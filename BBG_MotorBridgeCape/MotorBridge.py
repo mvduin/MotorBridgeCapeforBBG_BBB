@@ -31,11 +31,14 @@
 # by Jiankai.li
 
 import Adafruit_GPIO.I2C as I2C
-import Adafruit_BBIO.GPIO as GPIO
 import time
-Reset = "P9_23"
+import pathlib
+
+# reset pin is P9.23, i.e. gpio1.17
+reset_pin = pathlib.Path('/sys/class/gpio/gpio49/direction')
+reset_pin.write_text('low')
+
 MotorBridge = I2C.Device(0x4b, 2)
-GPIO.setup(Reset, GPIO.OUT)
 
 ReadMode  = 0
 WriteMode = 1
@@ -225,7 +228,7 @@ def SetDefault():
 
 class MotorBridgeCape:
     def __init__(self):
-        GPIO.output(Reset, GPIO.HIGH)
+        reset_pin.write_text('high')
         time.sleep(1)
 
     # init stepper motor A
