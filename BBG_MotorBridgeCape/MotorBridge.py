@@ -400,17 +400,12 @@ class MotorBridgeCape:
             WriteHalfWord(SVM6_ANGLE,Angle)
             time.sleep(DelayTime)
 
-def myloop():
-    print 'Hello From MotorBridge'
-    time.sleep(1)
-    motor.StepperMotorBMove(-1000,1000) # 20 steppers  1000us every step
-    time.sleep(1)
-    motor.StepperMotorBMove(1000,1000)  # 20 steppers  1000us every step
-    myloop()
-
-
 if __name__=="__main__":
+    print( 'Hello From MotorBridge' )
     motor = MotorBridgeCape()
     motor.StepperMotorBInit()
-    motor.StepperMotorBMove(1000,1000) # 20 steppers  1000us every step
-    myloop()
+    while True:
+        motor.StepperMotorBMove(1000,1000) # 20 steppers  1000us every step
+        time.sleep(1)
+        motor.StepperMotorBMove(-1000,1000) # 20 steppers  1000us every step
+        time.sleep(1)
