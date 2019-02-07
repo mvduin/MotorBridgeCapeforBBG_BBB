@@ -1,11 +1,11 @@
-# /*    
- # * MotorBridge.py 
- # * This is a library for BBG/BBB motor bridge cape 
- # *   
- # * Copyright (c) 2015 seeed technology inc.  
- # * Author      : Jiankai Li  
+# /*
+ # * MotorBridge.py
+ # * This is a library for BBG/BBB motor bridge cape
+ # *
+ # * Copyright (c) 2015 seeed technology inc.
+ # * Author      : Jiankai Li
  # * Create Time:  Nov 2015
- # * Change Log : 
+ # * Change Log :
  # *
  # * The MIT License (MIT)
  # *
@@ -15,10 +15,10 @@
  # * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  # * copies of the Software, and to permit persons to whom the Software is
  # * furnished to do so, subject to the following conditions:
- # * 
+ # *
  # * The above copyright notice and this permission notice shall be included in
  # * all copies or substantial portions of the Software.
- # * 
+ # *
  # * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  # * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  # * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -113,29 +113,29 @@ IO_NUM          = 6
 
 # PARAM_REG
 
-CONFIG_VALID        = 0  
+CONFIG_VALID        = 0
 CONFIG_TB_PWM_FREQ  = CONFIG_VALID + 4
-  
+
 I2C_ADDRESS         = CONFIG_TB_PWM_FREQ + 4
-  
+
 TB_1A_MODE          = I2C_ADDRESS + 1
 TB_1A_DIR           = TB_1A_MODE + 1
 TB_1A_DUTY          = TB_1A_DIR + 1
 TB_1A_SPM_SPEED     = TB_1A_DUTY + 2
 TB_1A_SPM_STEP      = TB_1A_SPM_SPEED + 4
-  
+
 TB_1B_MODE          = TB_1A_SPM_STEP + 4
 TB_1B_DIR           = TB_1B_MODE + 1
 TB_1B_DUTY          = TB_1B_DIR + 1
 TB_1B_SPM_SPEED     = TB_1B_DUTY + 2
 TB_1B_SPM_STEP      = TB_1B_SPM_SPEED + 4
-  
+
 TB_2A_MODE          = TB_1B_SPM_STEP + 4
 TB_2A_DIR           = TB_2A_MODE + 1
 TB_2A_DUTY          = TB_2A_DIR + 1
 TB_2A_SPM_SPEED     = TB_2A_DUTY + 2
 TB_2A_SPM_STEP      = TB_2A_SPM_SPEED + 4
-  
+
 TB_2B_MODE          = TB_2A_SPM_STEP + 4
 TB_2B_DIR           = TB_2B_MODE + 1
 TB_2B_DUTY          = TB_2B_DIR + 1
@@ -145,23 +145,23 @@ TB_2B_SPM_STEP      = TB_2B_SPM_SPEED + 4
 SVM1_STATE          = TB_2B_SPM_STEP + 4
 SVM1_FREQ           = SVM1_STATE + 1
 SVM1_ANGLE          = SVM1_FREQ + 2
- 
+
 SVM2_STATE          = SVM1_ANGLE + 2
 SVM2_FREQ           = SVM2_STATE + 1
 SVM2_ANGLE          = SVM2_FREQ + 2
- 
+
 SVM3_STATE          = SVM2_ANGLE + 2
 SVM3_FREQ           = SVM3_STATE + 1
 SVM3_ANGLE          = SVM3_FREQ + 2
- 
+
 SVM4_STATE          = SVM3_ANGLE + 2
 SVM4_FREQ           = SVM4_STATE + 1
 SVM4_ANGLE          = SVM4_FREQ + 2
- 
+
 SVM5_STATE          = SVM4_ANGLE + 2
 SVM5_FREQ           = SVM5_STATE + 1
 SVM5_ANGLE          = SVM5_FREQ + 2
-  
+
 SVM6_STATE          = SVM5_ANGLE + 2
 SVM6_FREQ           = SVM6_STATE + 1
 SVM6_ANGLE          = SVM6_FREQ + 2
@@ -175,22 +175,22 @@ IO2_STATE           = IO1_PPOD + 1
 IO2_MODE            = IO2_STATE + 1
 IO2_PUPD            = IO2_MODE + 1
 IO2_PPOD            = IO2_PUPD + 1
- 
+
 IO3_STATE           = IO2_PPOD + 1
 IO3_MODE            = IO3_STATE + 1
 IO3_PUPD            = IO3_MODE + 1
 IO3_PPOD            = IO3_PUPD + 1
-  
+
 IO4_STATE           = IO3_PPOD + 1
 IO4_MODE            = IO4_STATE + 1
 IO4_PUPD            = IO4_MODE + 1
 IO4_PPOD            = IO4_PUPD + 1
-  
+
 IO5_STATE           = IO4_PPOD + 1
 IO5_MODE            = IO5_STATE + 1
 IO5_PUPD            = IO5_MODE + 1
 IO5_PPOD            = IO5_PUPD + 1
- 
+
 IO6_STATE           = IO5_PPOD + 1
 IO6_MODE            = IO6_STATE + 1
 IO6_PUPD            = IO6_MODE + 1
@@ -210,7 +210,7 @@ def WriteHalfWord(Reg,Value):
     data[1] = Value & 0xff
     data[2] = (Value>>8) & 0xff
     MotorBridge.writeList(WriteMode,data)
-    
+
 def WriteOneWord(Reg,Value):
     data = [0 for i in range(5)]
     data[0] = Reg
@@ -227,15 +227,15 @@ class MotorBridgeCape:
     def __init__(self):
         GPIO.output(Reset, GPIO.HIGH)
         time.sleep(1)
-        
+
     # init stepper motor A
     def StepperMotorAInit(self):
         WriteByte(TB_1A_MODE,TB_SPM) #Stepper
         time.sleep(DelayTime)
         WriteHalfWord(TB_1A_DUTY,1000)    # voltage
         time.sleep(DelayTime)
-        
-    # MoveSteps > 0 CW 
+
+    # MoveSteps > 0 CW
     # MoveSteps < 0 CCW
     # StepDelayTime : delay time for every step. uint us
     def StepperMotorAMove(self,MoveSteps,StepDelayTime):
@@ -244,21 +244,21 @@ class MotorBridgeCape:
         else:
             WriteByte(TB_1A_DIR,TB_CCW)   #CW
             MoveSteps = -MoveSteps
-        time.sleep(DelayTime)    
+        time.sleep(DelayTime)
         WriteOneWord(TB_1A_SPM_SPEED,StepDelayTime)  # unit us
         time.sleep(DelayTime)
         WriteOneWord(TB_1A_SPM_STEP,MoveSteps)
         time.sleep(DelayTime)
-        
-        
+
+
     # init stepper motor B
     def StepperMotorBInit(self):
         WriteByte(TB_2A_MODE,TB_SPM) #Stepper
         time.sleep(DelayTime)
         WriteHalfWord(TB_2A_DUTY,1000)    # voltage
         time.sleep(DelayTime)
-        
-    # MoveSteps > 0 CW 
+
+    # MoveSteps > 0 CW
     # MoveSteps < 0 CCW
     # StepDelayTime : delay time for every step. uint us
     def StepperMotorBMove(self,MoveSteps,StepDelayTime):
@@ -267,19 +267,19 @@ class MotorBridgeCape:
         else:
             WriteByte(TB_2A_DIR,TB_CCW)   #CW
             MoveSteps = -MoveSteps
-        time.sleep(DelayTime)    
+        time.sleep(DelayTime)
         WriteOneWord(TB_2A_SPM_SPEED,StepDelayTime)  # unit us
         time.sleep(DelayTime)
         WriteOneWord(TB_2A_SPM_STEP,MoveSteps)
         time.sleep(DelayTime)
-        
+
     # Init DC Motor
     def DCMotorInit(self,MotorName,Frequency):
     # Init the DC Frequency
         WriteOneWord(CONFIG_TB_PWM_FREQ,Frequency)
         time.sleep(DelayTime)
-        
-    # Set the port as DC Motor 
+
+    # Set the port as DC Motor
         if MotorName == 1 or MotorName == 2:
             WriteByte(TB_1A_MODE,TB_DCM)
             time.sleep(DelayTime)
@@ -298,7 +298,7 @@ class MotorBridgeCape:
             time.sleep(DelayTime)
             WriteByte(TB_2B_DIR,TB_STOP)
             time.sleep(DelayTime)
-            
+
     # Drive the DC Motor
     # Direction 1 CW | 2 CCW
     # PWNDuty  0 ~ 100
@@ -308,13 +308,13 @@ class MotorBridgeCape:
             time.sleep(DelayTime)
             WriteOneWord(TB_1B_DUTY,PWMDuty*10)
             time.sleep(DelayTime)
-            
+
         if MotorName == 2:
             WriteByte(TB_1A_DIR,Direction)
             time.sleep(DelayTime)
             WriteOneWord(TB_1A_DUTY,PWMDuty*10)
             time.sleep(DelayTime)
-            
+
         if MotorName == 3:
             WriteByte(TB_2B_DIR,Direction)
             time.sleep(DelayTime)
@@ -324,9 +324,9 @@ class MotorBridgeCape:
         if MotorName == 4:
             WriteByte(TB_2A_DIR,Direction)
             time.sleep(DelayTime)
-            WriteOneWord(TB_2A_DUTY,PWMDuty*10)     
+            WriteOneWord(TB_2A_DUTY,PWMDuty*10)
             time.sleep(DelayTime)
-            
+
     # Stop the DC motor
     def DCMotorStop(self, MotorName):
         if MotorName == 1:
@@ -336,70 +336,70 @@ class MotorBridgeCape:
         if MotorName == 3:
             WriteByte(TB_2B_DIR,TB_STOP)
         if MotorName == 4:
-            WriteByte(TB_2A_DIR,TB_STOP)    
+            WriteByte(TB_2A_DIR,TB_STOP)
         time.sleep(DelayTime)
-    
-    # init the Servo 
+
+    # init the Servo
     def ServoInit(self,ServoName,Frequency):
         if ServoName == 1:
             WriteHalfWord(SVM1_FREQ,Frequency)
-            time.sleep(DelayTime)        
+            time.sleep(DelayTime)
             WriteByte(SVM1_STATE,SVM_ENABLE)
             time.sleep(DelayTime)
 
         if ServoName == 2:
-            WriteHalfWord(SVM2_FREQ,Frequency)  
+            WriteHalfWord(SVM2_FREQ,Frequency)
             time.sleep(DelayTime)
             WriteByte(SVM2_STATE,SVM_ENABLE)
             time.sleep(DelayTime)
         if ServoName == 3:
             WriteHalfWord(SVM3_FREQ,Frequency)
-            time.sleep(DelayTime)        
+            time.sleep(DelayTime)
             WriteByte(SVM3_STATE,SVM_ENABLE)
             time.sleep(DelayTime)
 
         if ServoName == 4:
-            WriteHalfWord(SVM4_FREQ,Frequency)  
+            WriteHalfWord(SVM4_FREQ,Frequency)
             time.sleep(DelayTime)
             WriteByte(SVM4_STATE,SVM_ENABLE)
             time.sleep(DelayTime)
         if ServoName == 5:
             WriteHalfWord(SVM5_FREQ,Frequency)
-            time.sleep(DelayTime)        
+            time.sleep(DelayTime)
             WriteByte(SVM5_STATE,SVM_ENABLE)
             time.sleep(DelayTime)
 
         if ServoName == 6:
-            WriteHalfWord(SVM6_FREQ,Frequency)  
+            WriteHalfWord(SVM6_FREQ,Frequency)
             time.sleep(DelayTime)
             WriteByte(SVM6_STATE,SVM_ENABLE)
             time.sleep(DelayTime)
-              
+
     def ServoMoveAngle(self,ServoName,Angle):
         if ServoName == 1:
-            WriteHalfWord(SVM1_ANGLE,Angle) 
+            WriteHalfWord(SVM1_ANGLE,Angle)
             time.sleep(DelayTime)
 
         if ServoName == 2:
-            WriteHalfWord(SVM2_ANGLE,Angle)   
+            WriteHalfWord(SVM2_ANGLE,Angle)
             time.sleep(DelayTime)
-            
+
         if ServoName == 3:
-            WriteHalfWord(SVM3_ANGLE,Angle) 
+            WriteHalfWord(SVM3_ANGLE,Angle)
             time.sleep(DelayTime)
 
         if ServoName == 4:
-            WriteHalfWord(SVM4_ANGLE,Angle)   
-            time.sleep(DelayTime)      
-            
+            WriteHalfWord(SVM4_ANGLE,Angle)
+            time.sleep(DelayTime)
+
         if ServoName == 5:
-            WriteHalfWord(SVM5_ANGLE,Angle) 
+            WriteHalfWord(SVM5_ANGLE,Angle)
             time.sleep(DelayTime)
 
         if ServoName == 6:
-            WriteHalfWord(SVM6_ANGLE,Angle)   
-            time.sleep(DelayTime)    
-            
+            WriteHalfWord(SVM6_ANGLE,Angle)
+            time.sleep(DelayTime)
+
 def myloop():
     print 'Hello From MotorBridge'
     time.sleep(1)
@@ -410,7 +410,6 @@ def myloop():
 
 
 if __name__=="__main__":
-    
     motor = MotorBridgeCape()
     motor.StepperMotorBInit()
     motor.StepperMotorBMove(1000,1000) # 20 steppers  1000us every step
