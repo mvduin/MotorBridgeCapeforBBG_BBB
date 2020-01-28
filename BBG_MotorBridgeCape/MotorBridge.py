@@ -30,7 +30,7 @@
 # FileName : MotorBridge.py
 # by Jiankai.li
 
-import Adafruit_GPIO.I2C as I2C
+from smbus2 import SMBus
 import time
 import pathlib
 
@@ -38,11 +38,11 @@ import pathlib
 reset_pin = pathlib.Path('/sys/class/gpio/gpio49/direction')
 reset_pin.write_text('low')
 
-MotorBridge = I2C.Device(0x4b, 2)
+i2c_bus = SMBus(2)
+i2c_addr = 0x4b
 
 ReadMode  = 0
 WriteMode = 1
-DeAddr    = 0X4B
 ConfigValid =  0x3a6fb67c
 DelayTime = 0.005
 
@@ -205,14 +205,14 @@ def WriteByte(Reg,Value):
     data = [0 for i in range(2)]
     data[0] = Reg
     data[1] = Value
-    MotorBridge.writeList(WriteMode,data)
+    i2c_bus.write_i2c_block_data(i2c_addr, WriteMode, data)
 
 def WriteHalfWord(Reg,Value):
     data = [0 for i in range(3)]
     data[0] = Reg
     data[1] = Value & 0xff
     data[2] = (Value>>8) & 0xff
-    MotorBridge.writeList(WriteMode,data)
+    i2c_bus.write_i2c_block_data(i2c_addr, WriteMode, data)
 
 def WriteOneWord(Reg,Value):
     data = [0 for i in range(5)]
@@ -221,7 +221,7 @@ def WriteOneWord(Reg,Value):
     data[2] = (Value>>8) & 0xff
     data[3] = (Value>>16) & 0xff
     data[4] = (Value>>24) & 0xff
-    MotorBridge.writeList(WriteMode,data)
+    i2c_bus.write_i2c_block_data(i2c_addr, WriteMode, data)
 
 def SetDefault():
     WriteOneWord(CONFIG_VALID,0x00000000)
